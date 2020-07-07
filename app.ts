@@ -1,1 +1,3 @@
-console.log('Your code goes here...');
+function add(n1, n2) {
+  return n1 + n2;
+}
