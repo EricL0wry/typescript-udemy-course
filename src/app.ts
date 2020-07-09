@@ -1,134 +1,87 @@
-type Admin = {
-  name: string;
-  privileges: string[];
-};
+// const names: Array<string> = [];
 
-type Employee = {
-  name: string;
-  startDate: Date;
-};
+// const promise: Promise<string> = new Promise((resolve, reject) => {
+//   setTimeout(() => {
+//     resolve('This is done!');
+//   }, 2000)
+// });
 
-type ElevatedEmployee = Admin & Employee;
+// promise.then(data => {
+//   data.split(' ');
+// })
 
-const e1: ElevatedEmployee = {
-  name: 'Eric',
-  privileges: ['create-server'],
-  startDate: new Date()
+function merge<T extends object, U extends object>(objA: T, objB: U) {
+  return Object.assign(objA, objB);
 }
 
-type Combinable = string | number;
-type Numeric = number | boolean;
+const mergedObj = merge({name: 'Eric', hobbies: ['Sports']}, {age: 36});
+console.log(mergedObj);
 
-type Universal = Combinable & Numeric;
+interface Lengthy {
+  length: number;
+}
 
-function add(a: number, b: number): number;
-function add(a: string, b: string): string;
-function add(a: number, b: string): string;
-function add(a: string, b: number): string;
-function add(a: Combinable, b: Combinable) {
-  if (typeof a === 'string' || typeof b === 'string') {
-    return a.toString() + b.toString();
+function countAndDescribe<T extends Lengthy>(element: T): [T, string] {
+  let descriptionText = 'Got no value.';
+  if (element.length === 1) {
+    descriptionText = 'Got 1 element';
+  } else if (element.length > 1) {
+    descriptionText = 'Got ' + element.length + ' elements.';
   }
-  return a + b;
+  return[element, descriptionText];
 }
 
-const result = add(1, 5);
-const result2 = add('Eric ', 'Lowry');
+console.log(countAndDescribe(['sports', 'cooking']));
 
-const fetchedUserData = {
-  id: 'u1',
-  name: 'Eric',
-  job: { title: 'CEO', description: 'My own company'}
-};
+function extractAndConvert<T extends object, U extends keyof T>(obj: T, key: U) {
+  return obj[key];
+}
 
-console.log(fetchedUserData?.job?.title);
+console.log(extractAndConvert({ name: 'Max' }, 'name')); 
 
-const userInput = '';
+class DataStorage<T extends string | number | boolean> {
+  private data: T[] = [];
 
-const storedData = userInput ?? 'DEFAULT';
+  addItem(item: T) {
+    this.data.push(item);
+  }
 
-console.log(storedData);
+  removeItem(item: T) {
+    if (this.data.indexOf(item) === -1) {
+      return;
+    }
+    this.data.splice(this.data.indexOf(item), 1);
+  }
 
-// type UnknownEmployee = Employee | Admin;
+  getItems() {
+    return [...this.data];
+  }
+}
 
-// function printEmployeeInformation(emp: UnknownEmployee) {
-//   console.log('Name: ' + emp.name);
-//   if ('privileges' in emp) {
-//     console.log('Privileges: ' + emp.privileges)
-//   }
-//   if ('startDate' in emp) {
-//     console.log('Start Date: ' + emp.startDate)
-//   }
-// }
+const textStorage = new DataStorage<string>();
+textStorage.addItem('Eric');
+textStorage.addItem('Katie'); 
+textStorage.removeItem('Eric');
+console.log(textStorage.getItems());
 
-// printEmployeeInformation({name: 'Eric', startDate: new Date()});
+const numberStorage = new DataStorage<number>();
 
-// class Car {
-//   drive() {
-//     console.log('Driving...');
-//   }
-// }
+// const objStorage = new DataStorage<object>();
+// const maxObj = {name: 'Eric'};
+// objStorage.addItem({name: 'Eric'});
+// objStorage.addItem({name: 'Katie'});
+// objStorage.removeItem({name: 'Eric'});
+// console.log(objStorage.getItems());
 
-// class Truck {
-//   drive() {
-//     console.log('Driving a truck');
-//   }
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
+}
 
-//   loadCargo(amount: number) {
-//     console.log('Loading cargo...' + amount);
-//   }
-// }
-
-// type Vehicle = Car | Truck;
-
-// const v1 = new Car();
-// const v2 = new Truck();
-
-// function useVehicle(vehicle: Vehicle) {
-//   vehicle.drive(); 
-//   if (vehicle instanceof Truck) {
-//     vehicle.loadCargo(1000)
-//   }
-// }
-
-// interface Bird {
-//   type: 'bird';
-//   flyingSpeed: number;
-// }
-
-// interface Horse {
-//   type: 'horse';
-//   runningSpeed: number;
-// }
-
-// type Animal = Bird | Horse;
-
-// function moveAnimal(animal: Animal) {
-//   let speed;
-//   switch (animal.type) {
-//     case 'bird':
-//       speed = animal.flyingSpeed;
-//       break;
-//     case 'horse':
-//       speed = animal.runningSpeed;
-//       break;
-//   }
-//   console.log('Moving at speed: ' + speed);
-// }
-
-// moveAnimal({type: 'bird', flyingSpeed: 10});
-
-// // const userInputElement = <HTMLInputElement>document.getElementById('user-input')!;
-// const userInputElement = <HTMLInputElement>document.getElementById('user-input')! as HTMLInputElement;
-// userInputElement.value = 'Hi there!';
-
-// interface ErrorContainer {  // { email: 'Not a valid email', username: 'Must start with a character' }
-//   id: string;
-//   [prop: string]: string;
-// }
-
-// const errorBag: ErrorContainer = {
-//   id: '4b',
-//   email: 'Not a valid email.',
-//   username: 'Please enter your user name.'
-// }
+function createCourseGoal(title: string, description: string, date: Date): CourseGoal {
+  let courseGoal: CourseGoal = {};
+  courseGoal.title = title;
+  courseGoal.description = description;
+  courseGoal.completeUntil = date;
+}
